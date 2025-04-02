@@ -9,8 +9,8 @@ resource "aws_route_table" "public" {
 
 # インターネットゲートウェイへのルート
 resource "aws_route" "public" {
-  destination_cidr_block = "0.0.0.0/0"
   route_table_id = aws_route_table.public.id
+  destination_cidr_block = "0.0.0.0/0"
   gateway_id = var.internet_gateway_id
 }
 
@@ -20,18 +20,22 @@ resource "aws_route_table_association" "public" {
     id = subnet_id
   }}
 
-  subnet_id = each.value.id
   route_table_id = aws_route_table.public.id
+  subnet_id = each.value.id
 }
 
 # ========================================================
 
 # privateルートテーブルの定義
 resource "aws_route_table" "private" {
+  for_each = {for idx,nat_gateway in var.nat_gateway_ids: idx => {
+    id = nat_gateway
+  }}
+
   vpc_id = var.vpc_id
 
   tags = {
-    Name = "terraform-rtable-private"
+    Name = "terraform-rtable-private-${each.key}"
   }
 }
 
@@ -41,8 +45,8 @@ resource "aws_route" "private" {
     id = nat_gateway
   }}
 
+  route_table_id = aws_route_table.private[each.key].id
   destination_cidr_block = "0.0.0.0/0"
-  route_table_id = aws_route_table.private.id
   nat_gateway_id = each.value.id
 }
 
@@ -52,6 +56,6 @@ resource "aws_route_table_association" "private" {
     id = subnet_id
   }}
 
+  route_table_id = aws_route_table.private[each.key].id
   subnet_id = each.value.id
-  route_table_id = aws_route_table.private.id
 }
