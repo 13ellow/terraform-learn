@@ -4,7 +4,7 @@ resource "aws_lb" "learning-alb" {
   load_balancer_type = "application"
   security_groups = [aws_security_group.alb-sg.id]
 
-  subnets = [for subnet in aws_subnet.public-subnet : subnet.id]
+  subnets = [var.pubic_subnets_ids]
 
   enable_deletion_protection = true
 

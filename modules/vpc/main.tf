@@ -1,16 +1,12 @@
-locals {
-  availability_zones =["ap-northeast-1a","ap-northeast-1c","ap-northeast-1d"]
-}
-
 resource "aws_vpc" "learning-vpc" {
-    cidr_block = "172.16.0.0/16"
+    cidr_block = var.cidr_block
     tags = {
         Name = "terraform-vpc"
     }
 }
 
 resource "aws_subnet" "public-subnet"{
-  for_each = {for idx,az in local.availability_zones : idx =>{
+  for_each = {for idx,az in var.az : idx =>{
     cidr_block = cidrsubnet(aws_vpc.learning-vpc.cidr_block,8,idx)
     availability_zone = az
   }}
@@ -24,7 +20,7 @@ resource "aws_subnet" "public-subnet"{
 }
 
 resource "aws_subnet" "private-subnet"{
-  for_each = {for idx, az in local.availability_zones : idx =>{
+  for_each = {for idx, az in var.az : idx =>{
     cidr_block = cidrsubnet(aws_vpc.learning-vpc.cidr_block,8,10+idx)
     availability_zone = az
   }}
@@ -46,7 +42,7 @@ resource "aws_internet_gateway" "learning-igw"{
 }
 
 resource "aws_eip" "learning-vpc-eip" {
-  for_each = {for idx,_ in local.availability_zones : idx => true}
+  for_each = {for idx,_ in var.az : idx => true}
 
   vpc = true
 
@@ -56,7 +52,7 @@ resource "aws_eip" "learning-vpc-eip" {
 }
 
 resource "aws_nat_gateway" "learning-ngw" {
-  for_each = {for idx,_ in local.availability_zones : idx => true}
+  for_each = {for idx,_ in var.az : idx => true}
 
   subnet_id = aws_subnet.public-subnet[each.key].id
   allocation_id = aws_eip.learning-vpc-eip[each.key].id

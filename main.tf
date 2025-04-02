@@ -10,16 +10,27 @@ terraform {
 }
 
 module "vpc" {
-  source = "./modules/vpc"
+  source     = "./modules/vpc"
+  cidr_block = "172.16.0.0/16"
 }
 
-module "securityGroup" {
-  source = "./modules/securityGroup"
+module "routeTable" {
+  source              = "./modules/routeTables"
+  vpc_id              = module.vpc.vpc_id
+  internet_gateway_id = module.vpc.internet_gateway_id
+  public_subnet_ids   = module.vpc.public_subnets_ids
+  private_subnet_ids  = module.vpc.private_subnets_ids
+  nat_gateway_ids     = module.vpc.nat_gateway_ids
 }
 
-module "alb" {
-  source = "./modules/alb"
-}
+# module "securityGroup" {
+#   source = "./modules/securityGroup"
+# }
+
+# module "alb" {
+#   source = "./modules/alb"
+#   pubic_subnets_ids = [for subnet in aws_subnet.public-subnet: subnet_id] 
+# }
 
 # output "vpc_id" {
 #   value = module.vpc.vpc_id
