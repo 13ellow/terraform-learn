@@ -21,3 +21,8 @@ output "nat_gateway_ids" {
   description = "nat gateway"
   value = [for nat_gateway in aws_nat_gateway.learning-ngw: nat_gateway.id]  
 }
+
+output "vpc_cidr_block" {
+  description = "vpc cidr"
+  value = aws_vpc.learning-vpc.cidr_block
+}

@@ -23,15 +23,14 @@ module "routeTable" {
   nat_gateway_ids     = module.vpc.nat_gateway_ids
 }
 
-# module "securityGroup" {
-#   source = "./modules/securityGroup"
-# }
+module "securityGroup" {
+  source         = "./modules/securityGroup"
+  vpc_id         = module.vpc.vpc_id
+  vpc_cidr_block = module.vpc.vpc_cidr_block
+}
 
-# module "alb" {
-#   source = "./modules/alb"
-#   pubic_subnets_ids = [for subnet in aws_subnet.public-subnet: subnet_id] 
-# }
-
-# output "vpc_id" {
-#   value = module.vpc.vpc_id
-# }
+module "alb" {
+  source            = "./modules/alb"
+  alb_sg_id         = module.securityGroup.alb_sg_id
+  public_subnet_ids = module.vpc.public_subnet_ids
+}
