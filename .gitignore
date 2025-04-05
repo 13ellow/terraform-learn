@@ -1,2 +1,15 @@
+## terraform init実行時に生成されるファイル・ディレクトリをignoreしておく
+## はじめてのterraformでこわいから
+
+# 
 .terraform
 
+
+# プロバイダーやモジュールの依存関係・相互関係を記録したファイル
+.terraform.lock.hcl
+
+# 
+terraform.tfstate
+
+# terraform.tfstateのバックアップファイル
+terraform.tfstate.backup
