@@ -1,14 +1,13 @@
 ## terraform init実行時に生成されるファイル・ディレクトリをignoreしておく
 ## はじめてのterraformでこわいから
 
-# 
+# キャッシュ情報や（あれば，認証情報）を記録し管理するための隠しディレクトリ
 .terraform
-
 
 # プロバイダーやモジュールの依存関係・相互関係を記録したファイル
 .terraform.lock.hcl
 
-# 
+# terraform内で管理しているリソースの状態ファイル
 terraform.tfstate
 
 # terraform.tfstateのバックアップファイル
