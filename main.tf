@@ -34,3 +34,13 @@ module "alb" {
   alb_sg_id         = module.securityGroup.alb_sg_id
   public_subnet_ids = module.vpc.public_subnet_ids
 }
+
+module "db" {
+  source            = "./modules/db"
+  availability_zone = local.availability_zones[0]
+  username          = var.DB_USERNAME
+  password          = var.DB_PASSWORD
+  db_name           = "test"
+  subnet_ids        = module.vpc.private_subnet_ids
+  security_groups   = [module.securityGroup.db_sg_id]
+}

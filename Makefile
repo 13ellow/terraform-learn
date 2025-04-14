@@ -9,6 +9,9 @@ init: ## terraform initを実行
 plan: ## terraform planを実行
 	@terraform plan
 
+dplan: ## terraform plan -destroyを実行
+	@terraform plan -destroy
+
 fmt: ## terraform fmtを実行
 	@terraform fmt
 

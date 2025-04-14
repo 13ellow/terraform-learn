@@ -8,7 +8,7 @@
 .terraform.lock.hcl
 
 # terraform内で管理しているリソースの状態ファイル
-terraform.tfstate
+terraform.tfstate*
 
-# terraform.tfstateのバックアップファイル
-terraform.tfstate.backup
+# 環境変数ファイル
+terraform.tfvars
