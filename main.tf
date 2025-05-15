@@ -31,6 +31,7 @@ module "securityGroup" {
 
 module "alb" {
   source            = "./modules/alb"
+  vpc_id            = module.vpc.vpc_id
   alb_sg_id         = module.securityGroup.alb_sg_id
   public_subnet_ids = module.vpc.public_subnet_ids
 }
@@ -43,4 +44,9 @@ module "db" {
   db_name           = "test"
   subnet_ids        = module.vpc.private_subnet_ids
   security_groups   = [module.securityGroup.db_sg_id]
+}
+
+module "ecs" {
+  source           = "./modules/ecs"
+  target_group_arn = module.alb.target_group_arn
 }
